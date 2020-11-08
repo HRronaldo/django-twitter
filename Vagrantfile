@@ -14,9 +14,16 @@ Vagrant.configure("2") do |config|
   # boxes at https://vagrantcloud.com/search.
   config.vm.box = "hashicorp/bionic64"
 
+  # Disable automatic box update checking. If you disable this, then
+  # boxes will only be checked for updates when the user runs
+  # `vagrant box outdated`. This is not recommended.
+  # config.vm.box_check_update = false
+
+  # 注意：
+  # 如果在线下载过慢，请将17-20行内容改为如下并去掉26行内容的注释：
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
-  config.vm.box_url = "/Users/huan/Downloads/program_environment/f3a07af0-d168-45d3-9060-ba7d070f4f30"
+  # config.vm.box_url = "你自己的box所在路径"
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
