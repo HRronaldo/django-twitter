@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
-# 说明：第一次vagrant reload --provision，可能会出现一些红色报错，不要担心，它是没有检测到，会随后自动安装；
-# 如果vagrant reload --provision有报错情况，请反复多次执行（2-3次）
 
 echo 'Start!'
 
-update-alternatives --install /usr/bin/python python /usr/bin/python3.6 2
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.6 2
 
 cd /vagrant
 
@@ -54,9 +52,11 @@ sudo apt-get install -y libmysqlclient-dev
 pip install mysqlclient
 
 
-# if ! sudo mysql -u root show datahases; | cut -d \| -f 1 | grep -w twitter; then
+# 设置mysql的root账户的密码为yourpassword
+# 创建名为twitter的数据库
 sudo mysql -u root << EOF
-	ALTER USER 'root'@'localhost' IDENTIFIED BY '*{password}*';
+	ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'yourpassword';
+	flush privileges;
 	show databases;
 	CREATE DATABASE twitter;
 EOF
@@ -65,9 +65,49 @@ EOF
 
 # 修改mysql密码&创建database
 # 设置密码为password
-# ALTER USER 'root'@'localhost' IDENTIFIED BY '*{password}*';	 
+# ALTER USER 'root'@'localhost' IDENTIFIED BY '*{password}*';
+# ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '新密码';	 
 # 创建名为twitter的数据库
 # CRESTE DATABASE twitter;
 
+# django界面以及admin
+
+cd /vagrant
+
+git clone https://github.com/HRronaldo/twitter.git
+
+cd twitter
+
+python manage.py migrate
+
+# superuser名字
+USER="root"
+# superuser密码
+PASS="yourpassword"
+# superuser邮箱
+MAIL="root@root.com"
+script="
+from django.contrib.auth.models import User;
+
+username = '$USER';
+password = '$PASS';
+email = '$MAIL';
+
+if User.objects.filter(username=username).count()==0:
+       User.objects.create_superuser(username, email, password);
+       print('Superuser created.');
+else:
+       print('Superuser creation skipped.');
+"
+printf "$script" | python manage.py shell
+
+
+
+# 如果想直接进入/vagrant路径下
+# 请输入vagrant ssh命令进入
+# 手动输入
+# 输入ls -a
+# 输入 vi .bashrc
+# 在最下面，添加cd /vagrant 
 
 echo 'All Done!'
