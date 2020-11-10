@@ -18,9 +18,13 @@ sudo apt-get update
 # if pip | cout \|
 # wget https://bootstrap.pypa.io/get-pip.py
 # sudo python get-pip.py
-sudo apt-get install -y python3-pip
-sudo apt-get install -y python-setuptools
-sudo ln -s /usr/bin/pip3 /usr/bin/pip
+if [ ! -f "/usr/bin/pip" ]; then
+  sudo apt-get install -y python3-pip
+  sudo apt-get install -y python-setuptools
+  sudo ln -s /usr/bin/pip3 /usr/bin/pip
+else
+  echo "pip3 已安装"
+fi
 
 # 升级pip，目前存在问题，read timed out，看脸，有时候可以，但大多时候不行
 # python -m pip install --upgrade pip
@@ -66,7 +70,7 @@ EOF
 # 修改mysql密码&创建database
 # 设置密码为password
 # ALTER USER 'root'@'localhost' IDENTIFIED BY '*{password}*';
-# ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '新密码';	 
+# ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '新密码';
 # 创建名为twitter的数据库
 # CRESTE DATABASE twitter;
 
@@ -104,6 +108,6 @@ printf "$script" | python manage.py shell
 # 手动输入
 # 输入ls -a
 # 输入 vi .bashrc
-# 在最下面，添加cd /vagrant 
+# 在最下面，添加cd /vagrant
 
 echo 'All Done!'
