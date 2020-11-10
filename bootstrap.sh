@@ -74,6 +74,8 @@ EOF
 
 cd /vagrant
 
+git clone https://github.com/HRronaldo/twitter.git
+
 cd twitter
 
 python manage.py migrate
