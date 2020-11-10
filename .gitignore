@@ -1,3 +1,5 @@
 *.box
 .vagrant
 Vagrantfile
+*.DS_Store
+__pycache__
