@@ -16,6 +16,7 @@ Including another URLconf
 from django.urls import include, path
 from rest_framework import routers
 from accounts.api import views
+from django.contrib import admin
 
 router = routers.DefaultRouter()
 router.register(r'api/users', views.UserViewSet)
@@ -24,5 +25,6 @@ router.register(r'api/users', views.UserViewSet)
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path('', include(router.urls)),
+    path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
