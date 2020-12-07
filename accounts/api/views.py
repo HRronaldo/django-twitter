@@ -1,10 +1,9 @@
 from accounts.api.serializers import UserSerializer
 from django.contrib.auth.models import User
-from rest_framework import permissions
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.contrib.auth import (
     authenticate as django_authenticate,
     login as django_login,
@@ -19,7 +18,7 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
 
 class AccountViewSet(viewsets.ViewSet):
@@ -34,6 +33,7 @@ class AccountViewSet(viewsets.ViewSet):
     @action(methods=['POST'], detail=False)
     def login(self, request):
         """
+        vagrant 中设置的默认admin登录账号密码
         {
             "username": "admin",
             "password": "admin"
