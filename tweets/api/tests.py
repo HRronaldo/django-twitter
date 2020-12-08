@@ -11,8 +11,6 @@ TWEET_CREATE_API = '/api/tweets/'
 class TweetApiTests(TestCase):
 
     def setUp(self):
-        self.anonymous_client = APIClient()
-
         self.user1 = self.createUser('user1', 'user1@jiuzhang.com')
         self.tweets1 = [
             self.createTweet(self.user1)
@@ -50,8 +48,8 @@ class TweetApiTests(TestCase):
         # 必须带 content
         response = self.user1_client.post(TWEET_CREATE_API)
         self.assertEqual(response.status_code, 400)
-        # content 不能太短
-        response = self.user1_client.post(TWEET_CREATE_API, {'content': '1'})
+        # content 不能空
+        response = self.user1_client.post(TWEET_CREATE_API, {'content': ''})
         self.assertEqual(response.status_code, 400)
         # content 不能太长
         response = self.user1_client.post(TWEET_CREATE_API, {
