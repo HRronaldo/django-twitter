@@ -1,5 +1,3 @@
-from abc import ABC
-
 from django.contrib.auth.models import User
 from rest_framework import serializers, exceptions
 
@@ -7,7 +5,7 @@ from rest_framework import serializers, exceptions
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'email')
+        fields = ('id', 'username', 'email')
 
 
 class SignupSerializer(serializers.ModelSerializer):
