@@ -12,7 +12,7 @@ class TweetSerializer(serializers.ModelSerializer):
 
 
 class TweetCreateSerializer(serializers.ModelSerializer):
-    content = serializers.CharField(min_length=6, max_length=140)
+    content = serializers.CharField(max_length=140)
 
     class Meta:
         model = Tweet
