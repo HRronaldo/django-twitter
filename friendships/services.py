@@ -6,19 +6,19 @@ class FriendshipService(object):
     @classmethod
     def get_followers(cls, user):
         # 错误的写法一
-        # friendships = Friendship.objects.filter(to_user=user)
-        # followers = [friendship.from_user for friendship in friendships]
         # 这种写法会导致 N + 1 Queries 的问题
         # 即，filter 出所有 friendships 耗费了一次 Query
         # 而 for 循环每个 friendship 取 from_user 又耗费了 N 次 Queries
+        # friendships = Friendship.objects.filter(to_user=user)
+        # return [friendship.from_user for friendship in friendships]
 
         # 错误的写法二
+        # 这种写法是使用了 JOIN 操作，让 friendship table 和 user table 在 from_user
+        # 这个属性上 join 了起来。join 操作在大规模用户的 web 场景下是禁用的，因为非常慢。
         # friendships = Friendship.objects.filter(
         #     to_user=user
         # ).select_related('from_user')
-        # followers = [friendship.from_user for friendship in friendships]
-        # 这种写法是使用了 JOIN 操作，让 friendship table 和 user table 在 from_user
-        # 这个属性上 join 了起来。join 操作在大规模用户的 web 场景下是禁用的，因为非常慢。
+        # return [friendship.from_user for friendship in friendships]
 
         # 正确的写法一，自己手动 filter id，使用 IN Query 查询
         # friendships = Friendship.objects.filter(to_user=user)
@@ -30,5 +30,4 @@ class FriendshipService(object):
         friendships = Friendship.objects.filter(
             to_user=user,
         ).prefetch_related('from_user')
-        followers = [friendship.from_user for friendship in friendships]
-        return followers
+        return [friendship.from_user for friendship in friendships]
