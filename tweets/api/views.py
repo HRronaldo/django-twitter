@@ -14,10 +14,10 @@ class TweetViewSet(viewsets.GenericViewSet,
     queryset = Tweet.objects.all()
     serializer_class = TweetCreateSerializer
 
-    def get_permission_classes(self):
+    def get_permissions(self):
         if self.action == 'list':
-            return [AllowAny]
-        return [IsAuthenticated]
+            return [AllowAny()]
+        return [IsAuthenticated()]
 
     def list(self, request, *args, **kwargs):
         """
@@ -36,7 +36,9 @@ class TweetViewSet(viewsets.GenericViewSet,
             user_id=request.query_params['user_id']
         ).order_by('-created_at')
         serializer = TweetSerializer(tweets, many=True)
-        return Response(serializer.data)
+        # 一般来说 json 格式的 response 默认都要用 hash 的格式
+        # 而不能用 list 的格式（约定俗成）
+        return Response({'tweets': serializer.data})
 
     def create(self, request, *args, **kwargs):
         """
