@@ -20,7 +20,6 @@ from tweets.api.views import TweetViewSet
 from friendships.api.views import FriendshipViewSet
 from newsfeeds.api.views import NewsFeedViewSet
 from django.contrib import admin
-import debug_toolbar
 
 
 router = routers.DefaultRouter()
@@ -36,5 +35,4 @@ urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('__debug__/', include(debug_toolbar.urls)),
 ]
