@@ -1,8 +1,8 @@
-from django.test import TestCase
+from testing.testcases import TestCase
 from rest_framework.test import APIClient
-from django.contrib.auth.models import User
 
 
+# 注意要加 '/' 结尾，要不然会产生 301 redirect
 LOGIN_URL = '/api/accounts/login/'
 LOGOUT_URL = '/api/accounts/logout/'
 SIGNUP_URL = '/api/accounts/signup/'
@@ -19,11 +19,6 @@ class AccountApiTests(TestCase):
             email='admin@jiuzhang.com',
             password='correct password',
         )
-
-    def createUser(self, username, email, password):
-        # 不能写成 User.objects.create()
-        # 因为 password 需要被加密, username 和 email 需要进行一些 normalize 处理
-        return User.objects.create_user(username, email, password)
 
     def test_login(self):
         # 每个测试函数必须以 test_ 开头，才会被自动调用进行测试
