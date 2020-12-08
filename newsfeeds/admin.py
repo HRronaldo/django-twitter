@@ -4,5 +4,5 @@ from newsfeeds.models import NewsFeed
 
 @admin.register(NewsFeed)
 class NewsFeedAdmin(admin.ModelAdmin):
-    list_filter = ('user', 'tweet', 'created_at')
+    list_display = ('user', 'tweet', 'created_at')
     date_hierarchy = 'created_at'
