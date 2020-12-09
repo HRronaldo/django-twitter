@@ -1,4 +1,5 @@
 """twitter URL Configuration
+
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.1/topics/http/urls/
 Examples:
@@ -19,10 +20,10 @@ from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r'api/users', views.UserViewSet)
-router.register(r'api/accounts', views.AccountViewSet, basename='accounts')
 
-# Wire up our API using automatic URL routing.
-# Additionally, we include login URLs for the browsable API.
+
+# Wire up our API using automatic URL routing. 
+# Additionally, we include loign URLs for the browsable API. 
 urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
