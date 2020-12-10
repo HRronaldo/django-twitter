@@ -32,7 +32,7 @@ class AccountViewSet(viewsets.ViewSet):
 
     @action(methods=['POST'], detail=False)
     def login(self, request):
-        serializer = self.get_serializer_class(data=request.data)
+        serializer = self.get_serializer_class()(data=request.data)
         if not serializer.is_valid():
             return Response({
                 "success": False,
@@ -62,7 +62,7 @@ class AccountViewSet(viewsets.ViewSet):
     
     @action(methods=['POST'], detail=False)
     def signup(self, request):
-        serializer = self.get_serializer_class(data=request.data)
+        serializer = self.get_serializer_class()(data=request.data)
         if not serializer.is_valid():
             return Response({
                 "success": False,
@@ -73,5 +73,12 @@ class AccountViewSet(viewsets.ViewSet):
         user = serializer.save()
         django_login(request, user)
         return Response({
-            "success": True
+            "success": True,
+            "user": UserSerializer(instance=user).data,
+        }, status=201)
+    
+    @action(methods=['GET'], detail=False)
+    def login_status(self, request):
+        return Response({
+            'has_logged_in': request.user.is_authenticated,
         })
