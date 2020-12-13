@@ -4,3 +4,4 @@ Vagrantfile
 *.DS_Store
 __pycache__
 .idea
+local_settings.py
