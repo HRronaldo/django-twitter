@@ -7,6 +7,9 @@ class Tweet(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        index_together = (('user', 'created_at'),)
+
     def __str__(self):
         # 这里是你执行print(tweet instance) 的时候会显示的内容
         return '{} {}: {}'.format(self.created_at, self.user, self.content)
