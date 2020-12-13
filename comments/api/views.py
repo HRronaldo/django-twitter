@@ -11,7 +11,7 @@ from comments.api.serializers import (
 )
 
 
-class CommentViewSet(viewsets.GenericViewSet, viewsets.mixins.UpdateModelMixin):
+class CommentViewSet(viewsets.GenericViewSet):
     """
     只实现 list, create, update, destroy 的方法
     不实现 retrieve（查询单个 comment） 的方法，因为没这个需求
