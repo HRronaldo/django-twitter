@@ -5,8 +5,8 @@ from tweets.api.serializers import TweetSerializer, TweetCreateSerializer
 from tweets.models import Tweet
 
 
-class TweetViewSet(viewsets.GenericViewSet, 
-                    viewsets.mixins.CreateModelMixin, 
+class TweetViewSet(viewsets.GenericViewSet,
+                    viewsets.mixins.CreateModelMixin,
                     viewsets.mixins.ListModelMixin):
     """
     API endpoint that allows users to create, list tweets
@@ -14,10 +14,10 @@ class TweetViewSet(viewsets.GenericViewSet,
     queryset = Tweet.objects.all()
     serializer_class = TweetCreateSerializer
 
-    def get_permissions_classes(self):
+    def get_permissions(self):
         if self.action == 'list':
-            return [AllowAny]
-        return [IsAuthenticated]
+            return [AllowAny()]
+        return [IsAuthenticated()]
 
     def list(self, request, *args, **kwargs):
         """
@@ -26,15 +26,19 @@ class TweetViewSet(viewsets.GenericViewSet,
         if 'user_id' not in request.query_params:
             return Response('missing user_id', status=400)
 
-            # 这句查询会被翻译为
-            # select * from twitter_tweets
-            # where user_id = xxx
-            # order by created_at desc
-            # 这句 SQL 查询会用到 user 和 created_at 的联合索引
-            # 单纯的 user 索引是不够的
-            tweets = Tweet.objects.filter(
-                user_id=request.query_params['user_id']
-            ).order_by('-created_at')
+        # 这句查询会被翻译为
+        # select * from twitter_tweets
+        # where user_id = xxx
+        # order by created_at desc
+        # 这句 SQL 查询会用到 user 和 created_at 的联合索引
+        # 单纯的 user 索引是不够的
+        tweets = Tweet.objects.filter(
+            user_id=request.query_params['user_id']
+        ).order_by('-created_at')
+        serializer = TweetSerializer(tweets, many=True)
+        # 一般来说json 格式的response 默认都要用hash 的格式
+        # 而不能用list 的格式（约定俗成）
+        return Response({'tweets': serializer.data})
 
     def create(self, request, *args, **kwargs):
         """
