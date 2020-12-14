@@ -38,9 +38,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    # include debug toolbar in installed apps
+    'debug_toolbar'
 ]
 
 MIDDLEWARE = [
+    # include the debug toolbar middleware as early as possible
+    # but must come after any other middlewares that encodes the response content
+    # such as 'GZipMiddleware'
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -49,6 +55,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# IPs allow to access django debug toolbar
+INTERNAL_IPS = ['127.0.0.1']
 
 ROOT_URLCONF = 'twitter.urls'
 
