@@ -10,6 +10,7 @@ from comments.api.serializers import (
     CommentSerializerForUpdate,
 )
 from utils.decorators import required_params
+from inbox.services import NotificationService
 
 
 class CommentViewSet(viewsets.GenericViewSet):
@@ -60,6 +61,7 @@ class CommentViewSet(viewsets.GenericViewSet):
 
         # save 方法会触发 serializer 里的 create 方法，点进 save 的具体实现里可以看到
         comment = serializer.save()
+        NotificationService.send_comment_notification(comment)
         return Response(
             CommentSerializer(comment).data,
             status=status.HTTP_201_CREATED,
@@ -90,3 +92,6 @@ class CommentViewSet(viewsets.GenericViewSet):
         # DRF 里默认 destroy 返回的是 status code = 204 no content
         # 这里 return 了 success=True 更直观的让前端去做判断，所以 return 200 更合适
         return Response({'success': True}, status=status.HTTP_200_OK)
+
+    # <HOMEWORK> 增加一个 like 的方法让用户可以通过 /api/comments/<id>/like/ 点赞
+    # <HOMEWORK> 增加一个 unlike 的方法让用户可以通过 /api/comments/<id>/unlike/ 取消点赞
