@@ -20,6 +20,7 @@ from rest_framework import routers
 from accounts.api.views import UserViewSet, AccountViewSet
 from comments.api.views import CommentViewSet
 from friendships.api.views import FriendshipViewSet
+from likes.api.views import LikeViewSet
 from newsfeeds.api.views import NewsFeedViewSet
 from tweets.api.views import TweetViewSet
 
@@ -31,6 +32,7 @@ router.register(r'api/tweets', TweetViewSet, basename='tweets')
 router.register(r'api/friendships', FriendshipViewSet, basename='friendships')
 router.register(r'api/newsfeeds', NewsFeedViewSet, basename='newsfeeds')
 router.register(r'api/comments', CommentViewSet, basename='comments')
+router.register(r'api/likes', LikeViewSet, basename='likes')
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
