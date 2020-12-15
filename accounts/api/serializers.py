@@ -8,6 +8,34 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'email')
 
 
+class UserSerializerForComment(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username')
+
+
+class UserSerializerForLike(UserSerializerForComment):
+    pass
+
+
+class UserSerializerForTweet(serializers.ModelSerializer):
+    nickname = serializers.CharField(source='profile.nickname')
+    avatar_url = serializers.SerializerMethodField()
+
+    def get_avatar_url(self, obj):
+        if obj.profile.avatar:
+            return obj.profile.avatar.url
+        return None
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'nickname', 'avatar_url')
+
+
+class UserSerializerForFriendship(UserSerializerForTweet):
+    pass
+
+
 class SignupSerializer(serializers.ModelSerializer):
     username = serializers.CharField(max_length=20, min_length=6)
     password = serializers.CharField(max_length=20, min_length=6)
