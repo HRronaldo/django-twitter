@@ -28,8 +28,9 @@ class LikeViewSet(viewsets.GenericViewSet):
                 'message': 'Please check input',
                 'errors': serializer.errors,
             }, status=status.HTTP_400_BAD_REQUEST)
-        instance = serializer.save()
-        NotificationService.send_like_notification(instance)
+        instance, created = serializer.get_or_create()
+        if created:
+            NotificationService.send_like_notification(instance)
         return Response(
             LikeSerializer(instance).data,
             status=status.HTTP_201_CREATED,
