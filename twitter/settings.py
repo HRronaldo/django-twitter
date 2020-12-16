@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,6 +25,8 @@ SECRET_KEY = '&9!(fme+ftwl-&o!_*eas9fsymce2b%rle4i+u3h=ny5oa1%=*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+TESTING = ((" ".join(sys.argv)).find('manage.py test') != -1)
 
 ALLOWED_HOSTS = ['*']
 INTERNAL_IPS = [
@@ -51,6 +54,7 @@ INSTALLED_APPS = [
     'newsfeeds',
     'comments',
     'likes',
+    'photos',
 ]
 
 REST_FRAMEWORK = {
@@ -145,6 +149,16 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+if TESTING:
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+
+# media 的作用适用于存放被用户上传的文件信息
+# 当我们使用默认 FileSystemStorage 作为 DEFAULT_FILE_STORAGE 的时候
+# 文件会被默认上传到 MEDIA_ROOT 指定的目录下
+# media 和 static 的区别是：
+# - static 里通常是 css,js 文件之类的静态代码文件，是用户可以直接访问的代码文件
+# - media 里使用户上传的数据文件，而不是代码
+MEDIA_ROOT = 'media/'
 
 # 按照你在 AWS 上创建的配置来设置你的 BUCKET_NAME 和 REGION_NAME
 AWS_STORAGE_BUCKET_NAME = 'django-twitter'
