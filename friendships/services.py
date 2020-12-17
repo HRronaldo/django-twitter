@@ -5,7 +5,22 @@ class FriendshipService(object):
 
     @classmethod
     def get_followers(cls, user):
-        # 正确的写法一，自己手动 filter id，使用 IN Query 查询
+        # 错误的写法一
+        # 这种写法会导致N + 1 Queries 的问题
+        # 即，filter 出所有friendships 耗费了一次Query
+        # 而for 循环每个friendship 取from_user 又耗费了N 次Queries
+        # friendships = Friendship.objects.filter(to_user=user)
+        # return [friendship.from_user for friendship in friendships]
+
+        # 错误的写法二
+        # 这种写法是使用了JOIN 操作，让friendship table 和user table 在from_user
+        # 这个属性上join 了起来。join 操作在大规模用户的web 场景下是禁用的，因为非常慢。
+        # friendships = Friendship.objects.filter(
+        #     to_user=user
+        # ).select_related('from_user')
+        # return [friendship.from_user for friendship in friendships]
+
+        # 正确的写法一，自己手动filter id，使用IN Query 查询
         # friendships = Friendship.objects.filter(to_user=user)
         # follower_ids = [friendship.from_user_id for friendship in friendships]
         # followers = User.objects.filter(id__in=follower_ids)
