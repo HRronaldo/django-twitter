@@ -1,3 +1,6 @@
+from django import urls
+from django.conf.urls import url
+from django.http import response
 from rest_framework.test import APIClient
 from testing.testcases import TestCase
 from tweets.models import Tweet
@@ -6,6 +9,7 @@ from tweets.models import Tweet
 # 注意要加 '/' 结尾，要不然会产生 301 redirect
 TWEET_LIST_API = '/api/tweets/'
 TWEET_CREATE_API = '/api/tweets/'
+TWEET_RETRIEVE_API = '/api/tweets/{}'
 
 
 class TweetApiTests(TestCase):
@@ -68,3 +72,20 @@ class TweetApiTests(TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.data['user']['id'], self.user1.id)
         self.assertEqual(Tweet.objects.count(), tweets_count + 1)        
+
+    def test_retrieve(self):
+        # tweet with id=-1 does not exist
+        url = TWEET_RETRIEVE_API.format(-1)
+        response = self.anonymous_client.get(url)
+        self.assertEqual(response.status_code, 404)
+
+        # 获取某个tweet 的时候会一起把comments 也拿下
+        tweet = self.createTweet(self.user1)
+        url = TWEET_RETRIEVE_API.format(tweet.id)
+        response = self.anonymous_client.get(url)
+        self.assertEqual(len(response.data['comments']), 0)
+
+        self.createComment(self.user2, tweet, 'holly s***')
+        self.createComment(self.user1, tweet, 'hmm...')
+        response = self.anonymous_client.get(url)
+        self.assertEqual(len(response.data['comments']), 2)

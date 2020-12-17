@@ -9,6 +9,7 @@ from django_filters.rest_framework import DjangoFilterBackend, filterset
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from utils.decorators import required_params
 
 
 class CommentViewSet(viewsets.GenericViewSet):
@@ -32,11 +33,8 @@ class CommentViewSet(viewsets.GenericViewSet):
             return [IsAuthenticated(), IsObjectOwner()]
         return [AllowAny()]
 
+    @required_params(params=['tweet_id'])
     def list(self, request, *args, **kwargs):
-        if 'tweet_id' not in request.query_params:
-            return Response({
-                'message': 'missing tweet_id'
-            }, status=status.HTTP_400_BAD_REQUEST)
         queryset = self.filter_queryset(
             self.get_queryset()
         ).order_by('created_at')
