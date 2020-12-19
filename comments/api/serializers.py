@@ -7,10 +7,21 @@ from tweets.models import Tweet
 
 class CommentSerializer(serializers.ModelSerializer):
     user = UserSerializer()
+    likes_count = serializers.SerializerMethodField()
+
+    def get_likes_count(self, obj):
+        return obj.like_set.count()
 
     class Meta:
         model = Comment
-        fields = ('id', 'tweet_id', 'user', 'content', 'created_at')
+        fields = (
+            'id', 
+            'tweet_id', 
+            'user', 
+            'content', 
+            'created_at',
+            'likes_count',
+        )
 
 
 class CommentSerializerForCreate(serializers.ModelSerializer):

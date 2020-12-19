@@ -1,26 +1,54 @@
-from django.db.models import fields
 from accounts.api.serializers import UserSerializer
 from comments.api.serializers import CommentSerializer
+from django.contrib.contenttypes.models import ContentType
+from likes.api.serializers import LikeSerializer
+from likes.models import Like
 from rest_framework import serializers
 from tweets.models import Tweet
 
 
 class TweetSerializer(serializers.ModelSerializer):
     user = UserSerializer()
+    comments_count = serializers.SerializerMethodField()
+    likes_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Tweet
-        fields = ('id', 'user', 'created_at', 'content')
+        fields = (
+            'id', 
+            'user', 
+            'created_at', 
+            'content',
+            'comments_count',
+            'likes_count',
+        )
+
+    def get_likes_count(self, obj):
+        return obj.like_set.count()
+    
+    def get_comments_count(self, obj):
+        return obj.comment_set.count()
 
 
-class TweetSerializerWithComments(serializers.ModelSerializer):
+class TweetSerializerForDetail(TweetSerializer):
     user = UserSerializer()
     # <HOMEWORK> 使用serializers.SerializerMethodField 的方式实现comments
     comments = CommentSerializer(source='comment_set', many=True)
+    likes = LikeSerializer(source='like_set', many=True)
 
     class Meta:
         model = Tweet
-        fields = ('id', 'user', 'comments', 'created_at', 'content')
+        fields = (
+            'id', 
+            'user', 
+            'comments', 
+            'created_at', 
+            'content',
+            'likes',
+            'comments',
+            'likes_count',
+            'comments_count',
+        )
 
     
 class TweetCreateSerializer(serializers.ModelSerializer):

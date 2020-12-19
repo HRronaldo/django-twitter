@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from tweets.api.serializers import (
     TweetSerializer, 
     TweetCreateSerializer,
-    TweetSerializerWithComments,
+    TweetSerializerForDetail,
 )
 from tweets.models import Tweet
 from utils.decorators import required_params
@@ -27,7 +27,7 @@ class TweetViewSet(viewsets.GenericViewSet):
         # <HOMEWORK> 通过某个query 参数with_comments 来决定是否需要带上comments
         tweet = self.get_object()
         return Response(
-            TweetSerializerWithComments(tweet).data,
+            TweetSerializerForDetail(tweet).data,
             status=status.HTTP_200_OK,
         )
 

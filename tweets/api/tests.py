@@ -1,6 +1,3 @@
-from django import urls
-from django.conf.urls import url
-from django.http import response
 from rest_framework.test import APIClient
 from testing.testcases import TestCase
 from tweets.models import Tweet
@@ -9,7 +6,7 @@ from tweets.models import Tweet
 # 注意要加 '/' 结尾，要不然会产生 301 redirect
 TWEET_LIST_API = '/api/tweets/'
 TWEET_CREATE_API = '/api/tweets/'
-TWEET_RETRIEVE_API = '/api/tweets/{}'
+TWEET_RETRIEVE_API = '/api/tweets/{}/'
 
 
 class TweetApiTests(TestCase):
@@ -83,6 +80,7 @@ class TweetApiTests(TestCase):
         tweet = self.createTweet(self.user1)
         url = TWEET_RETRIEVE_API.format(tweet.id)
         response = self.anonymous_client.get(url)
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data['comments']), 0)
 
         self.createComment(self.user2, tweet, 'holly s***')
