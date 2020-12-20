@@ -16,6 +16,7 @@ Including another URLconf
 from likes.models import Like
 from accounts.api.views import AccountViewSet, UserViewSet
 from comments.api.views import CommentViewSet
+from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
 from friendships.api.views import FriendshipViewSet
@@ -41,3 +42,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),    # 实现admin界面
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns.append(
+        path('__debug__', include(debug_toolbar.urls))
+    )

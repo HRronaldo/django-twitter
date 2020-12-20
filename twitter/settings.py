@@ -26,6 +26,10 @@ SECRET_KEY = 'av=0tr&0v^*35_=e5_0xl_1wji$5sjee9^8via)nu!*r5mfs7r'
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+INTERNAL_IPS = [
+    '127.0.0.1',
+    '10.0.2.2',
+]
 
 
 # Application definition
@@ -39,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'django_filters',
+    'debug_toolbar',
 
 
     'accounts',
@@ -63,6 +68,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'twitter.urls'
