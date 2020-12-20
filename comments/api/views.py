@@ -5,7 +5,8 @@ from comments.api.serializers import (
     CommentSerializerForCreate,
     CommentSerializerForUpdate
 )
-from django_filters.rest_framework import DjangoFilterBackend, filterset
+from django_filters.rest_framework import DjangoFilterBackend
+from inbox.services import NotificationService
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -60,6 +61,7 @@ class CommentViewSet(viewsets.GenericViewSet):
         
         # save 方法会触发serializer 里的create 方法，点进save 的具体实现里面可以看到
         comment = serializer.save()
+        NotificationService.send_comment_notification(comment)
         return Response(
             CommentSerializer(comment).data,
             status=status.HTTP_201_CREATED,
@@ -90,3 +92,6 @@ class CommentViewSet(viewsets.GenericViewSet):
         # DRF 里默认destroy 返回的是status code = 204 no content
         # 这里return 了success = True 更直观的让前端去做判断，所以return 200更合适
         return Response({'success': True}, status=status.HTTP_200_OK)
+
+# <HOMEWORK> 增加一个 like 的方法让用户可以通过 /api/comments/<id>/like/ 点赞
+# <HOMEWORK> 增加一个 unlike 的方法让用户可以通过 /api/comments/<id>/unlike/ 取消点赞
