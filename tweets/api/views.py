@@ -66,3 +66,6 @@ class TweetViewSet(viewsets.GenericViewSet):
             TweetSerializer(tweet).data, 
             status=status.HTTP_201_CREATED,
         )
+
+    # <HOMEWORK> 增加一个 like 的方法让用户可以通过 /api/tweets/<id>/like/ 点赞
+    # <HOMEWORK> 增加一个 unlike 的方法让用户可以通过 /api/tweets/<id>/unlike/ 取消点赞

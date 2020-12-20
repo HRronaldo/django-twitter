@@ -1,9 +1,9 @@
 from functools import wraps
-from rest_framework import decorators, status
+from rest_framework import status
 from rest_framework.response import Response
 
 
-def required_params(request_attr='query_params', params=None):
+def required_params(method='GET', params=None):
     """
     当我们使用@required_params(params=['some_params])的时候
     这个required_params 函数应该需要返回一个decorator 函数，
@@ -22,7 +22,10 @@ def required_params(request_attr='query_params', params=None):
         """
         @wraps(view_func)
         def _warpped_view(instance, request, *args, **kwargs):
-            data = getattr(request, request_attr)
+            if method.lower() == 'get':
+                data = request.query_params
+            else:
+                data = request.data
             missing_params = [
                 param
                 for param in params
